@@ -1,5 +1,5 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/Girochin/version', __FILE__)
+require File.expand_path('../lib/girochin/version', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.authors       = ["Mihail Butorin", "Nikita Chernov"]
