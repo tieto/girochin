@@ -17,10 +17,29 @@ describe Girochin::Request do
   subject { girochin_request }
 
   describe 'headers' do
-    its(:headers)    { should_not be_empty               }
-    its(:headers)    { should include 'HTTP_USER_AGENT'  }
-    its(:user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
-    its(:browser)    { should eq 'UNKNOWN'               }
+    context 'from request object' do
+      let(:girochin_request) { Girochin::Request.new request }
+
+      its(:headers)         { should_not be_empty               }
+      its(:headers)         { should include 'HTTP_USER_AGENT'  }
+      its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
+      its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
+      its(:browser)         { should eq 'UNKNOWN'               }
+    end
+
+    context 'from hash' do
+      let(:girochin_request) do
+        Girochin::Request.new({
+          http_user_agent: 'DUMMY_HTTP_USER_AGENT'
+        })
+      end
+
+      its(:headers)         { should_not be_empty               }
+      its(:headers)         { should include 'HTTP_USER_AGENT'  }
+      its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
+      its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
+      its(:browser)         { should eq 'UNKNOWN'               }
+    end
   end
 
   describe 'Chrome' do
