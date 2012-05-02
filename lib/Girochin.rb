@@ -1,2 +1,2 @@
-require "Girochin/version"
-require "Girochin/request"
+require "girochin/version"
+require "girochin/request"
