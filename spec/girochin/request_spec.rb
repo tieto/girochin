@@ -22,9 +22,6 @@ describe Girochin::Request do
 
       its(:headers)         { should_not be_empty               }
       its(:headers)         { should include 'HTTP_USER_AGENT'  }
-      its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
-      its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
-      its(:browser)         { should eq 'UNKNOWN'               }
     end
 
     context 'from hash' do
@@ -34,11 +31,20 @@ describe Girochin::Request do
         })
       end
 
-      its(:headers)         { should_not be_empty               }
-      its(:headers)         { should include 'HTTP_USER_AGENT'  }
+      its(:headers)         { should_not be_empty                 }
+      its(:headers)         { should include 'HTTP_USER_AGENT'    }
+      its(:headers)         { should_not include :http_user_agent }
+    end
+
+    describe 'user agent' do
       its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
       its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
       its(:browser)         { should eq 'UNKNOWN'               }
+    end
+
+    describe '#serialize' do
+      subject     { girochin_request.serialize      }
+      its(:keys)  { should include :http_user_agent }
     end
   end
 

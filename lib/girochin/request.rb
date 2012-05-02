@@ -16,5 +16,9 @@ module Girochin
     def browser
       'UNKNOWN'
     end
+
+    def serialize
+      @headers.inject({}) { |h, (k, v)| h[k.downcase.to_sym] = v; h }
+    end
   end
 end
