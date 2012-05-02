@@ -4,8 +4,8 @@ require File.expand_path('../lib/Girochin/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Mihail Butorin", "Nikita Chernov"]
   gem.email         = ["misbut@gmail.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = 'Analyzes request headers'
+  gem.summary       = 'Analyzes request headers'
   gem.homepage      = ""
 
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
@@ -15,5 +15,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Girochin::VERSION
 
-  gem.add_development_dependency ‘rspec’
+  gem.add_development_dependency 'rspec'
 end
