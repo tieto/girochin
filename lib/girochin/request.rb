@@ -10,5 +10,9 @@ module Girochin
     def user_agent
       @headers['HTTP_USER_AGENT']
     end
+
+    def browser
+      'UNKNOWN'
+    end
   end
 end
