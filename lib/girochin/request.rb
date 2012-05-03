@@ -1,24 +1,54 @@
 module Girochin
-  class Request
+  module Request
 
-    attr_accessor :headers
+    attr_reader :http_user_agent
 
-    def initialize(request)
-      @headers = request.is_a?(Hash) ? request.inject({}) { |h, (k, v)| h[k.to_s.upcase] = v; h } :
-                                       request.headers
-    end
-
-    def http_user_agent
-      @headers['HTTP_USER_AGENT']
-    end
     alias :user_agent :http_user_agent
 
-    def browser
-      'UNKNOWN'
+    def http_request=(request)
+      @http_user_agent = request.headers['HTTP_USER_AGENT']
     end
 
-    def serialize
-      @headers.inject({}) { |h, (k, v)| h[k.downcase.to_sym] = v; h }
+    def browser_name
+      @browser_name ||= case http_user_agent
+        when /konqueror/i then 'Konqueror'
+        when /chrome/i    then 'Chrome'
+        when /safari/i    then 'Safari'
+        when /msie/i      then 'Internet Explorer'
+        when /opera/i     then 'Opera'
+        when /firefox/i   then 'Firefox'
+        else 'Unknown'
+      end
+    end
+
+    def browser_version
+      @browser_version ||= case browser_code_name
+        when 'Chrome'
+          $1 if http_user_agent =~ /chrome\/([\d\w\.\-]+)/i
+        when 'Safari'
+          $1 if http_user_agent =~ /version\/([\d\w\.\-]+)/i
+        else
+          $1 if http_user_agent =~ /#{browser_code_name}[\/ ]([\d\w\.\-]+)/i
+      end
+    end
+
+    def user_os
+      case http_user_agent
+        when /windows nt 6\.0/i      then 'Windows Vista'
+        when /windows nt 6\.\d+/i    then 'Windows 7'
+        when /windows nt 5\.2/i      then 'Windows 2003'
+        when /windows nt 5\.1/i      then 'Windows XP'
+        when /windows nt 5\.0/i      then 'Windows 2000'
+        when /os x (\d+)[._](\d+)/i  then "OS X #{$1}.#{$2}"
+        when /linux/i                then 'Linux'
+        else 'Unknown'
+      end
+    end
+
+  private
+
+    def browser_code_name
+      @browser_code_name ||= browser_name == 'Internet Explorer' ? 'MSIE' : browser_name
     end
   end
-end
+end 

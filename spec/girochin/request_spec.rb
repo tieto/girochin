@@ -2,54 +2,50 @@ require 'girochin.rb'
 
 Request = Struct.new(:headers)
 
+class MyClass
+  include Girochin::Request
+end
+
 describe Girochin::Request do
 
   let(:http_user_agent) { 'DUMMY_HTTP_USER_AGENT' }
 
-  let(:request) do
-    Request.new({
-      'HTTP_USER_AGENT' => http_user_agent
-    })
+  let(:request) { Request.new({ 'HTTP_USER_AGENT' => http_user_agent }) }
+
+  let(:my_instance) do
+    a = MyClass.new
+    a.http_request = request
+    a
   end
 
-  let(:girochin_request) { Girochin::Request.new request }
+  subject { my_instance }
 
-  subject { girochin_request }
-
-  describe 'headers' do
-    context 'from request object' do
-      let(:girochin_request) { Girochin::Request.new request }
-
-      its(:headers)         { should_not be_empty               }
-      its(:headers)         { should include 'HTTP_USER_AGENT'  }
-    end
-
-    context 'from hash' do
-      let(:girochin_request) do
-        Girochin::Request.new({
-          http_user_agent: 'DUMMY_HTTP_USER_AGENT'
-        })
-      end
-
-      its(:headers)         { should_not be_empty                 }
-      its(:headers)         { should include 'HTTP_USER_AGENT'    }
-      its(:headers)         { should_not include :http_user_agent }
-    end
-
-    describe 'user agent' do
-      its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
-      its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
-      its(:browser)         { should eq 'UNKNOWN'               }
-    end
-
-    describe '#serialize' do
-      subject     { girochin_request.serialize      }
-      its(:keys)  { should include :http_user_agent }
-    end
+  describe 'user agent' do
+    its(:http_user_agent) { should eq 'DUMMY_HTTP_USER_AGENT' }
+    its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
+    its(:browser_name)    { should eq 'Unknown'               }
   end
 
-  describe 'Chrome' do
-    let(:http_user_agent) { 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19' }
-    its(:browser)         { should eq 'Chrome' }
+  describe 'Browsers' do
+    context 'Chrome' do
+      let(:http_user_agent) { 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.168 Safari/535.19' }
+      its(:browser_name)    { should eq 'Chrome'        }
+      its(:browser_version) { should eq '18.0.1025.168' }
+      its(:user_os)         { should eq 'OS X 10.6'     }
+    end
+
+    context 'IE' do
+      let(:http_user_agent) { 'Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0; InfoPath.2; MS-RTC LM 8)' }
+      its(:browser_name)    { should eq 'Internet Explorer' }
+      its(:browser_version) { should eq '8.0'               }
+      its(:user_os)         { should eq 'Windows XP'        }
+    end
+
+    context 'Win/Firefox' do
+      let(:http_user_agent) { 'Mozilla/5.0 (Windows NT 5.1; rv:12.0) Gecko/20100101 Firefox/12.0' }
+      its(:browser_name)    { should eq 'Firefox'    }
+      its(:browser_version) { should eq '12.0'       }
+      its(:user_os)         { should eq 'Windows XP' }
+    end
   end
 end
