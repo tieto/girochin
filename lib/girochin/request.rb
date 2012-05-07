@@ -1,13 +1,17 @@
 module Girochin
   module Request
 
-    attr_reader :http_user_agent
+    attr_reader :http_user_agent, :remote_addr, :http_referer
 
     alias :user_agent :http_user_agent
 
     def http_request=(request)
       @http_user_agent = request.headers['HTTP_USER_AGENT']
+      @remote_addr     = request.headers['REMOTE_ADDR']
+      @http_referer    = request.headers['HTTP_REFERER']
     end
+
+    alias :ip_address :remote_addr
 
     def browser_name
       @browser_name ||= case http_user_agent
@@ -34,13 +38,14 @@ module Girochin
 
     def user_os
       case http_user_agent
-        when /windows nt 6\.0/i      then 'Windows Vista'
-        when /windows nt 6\.\d+/i    then 'Windows 7'
-        when /windows nt 5\.2/i      then 'Windows 2003'
-        when /windows nt 5\.1/i      then 'Windows XP'
-        when /windows nt 5\.0/i      then 'Windows 2000'
-        when /os x (\d+)[._](\d+)/i  then "OS X #{$1}.#{$2}"
-        when /linux/i                then 'Linux'
+        when /windows nt 6\.0/i        then 'Windows Vista'
+        when /windows nt 6\.\d+/i      then 'Windows 7'
+        when /windows nt 5\.2/i        then 'Windows 2003'
+        when /windows nt 5\.1/i        then 'Windows XP'
+        when /windows nt 5\.0/i        then 'Windows 2000'
+        when /os x (\d+)[._](\d+)/i    then "OS X #{$1}.#{$2}"
+        when /android (\d+)[._](\d+)/i then "Android #{$1}.#{$2}"
+        when /linux/i                  then 'Linux'
         else 'Unknown'
       end
     end
@@ -51,4 +56,4 @@ module Girochin
       @browser_code_name ||= browser_name == 'Internet Explorer' ? 'MSIE' : browser_name
     end
   end
-end 
+end

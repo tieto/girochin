@@ -10,7 +10,13 @@ describe Girochin::Request do
 
   let(:http_user_agent) { 'DUMMY_HTTP_USER_AGENT' }
 
-  let(:request) { Request.new({ 'HTTP_USER_AGENT' => http_user_agent }) }
+  let(:request) do
+    Request.new({
+      'HTTP_USER_AGENT' => http_user_agent,
+      'REMOTE_ADDR' => '127.0.0.1',
+      'HTTP_REFERER' => 'www.rubylang.org'
+    })
+  end
 
   let(:my_instance) do
     a = MyClass.new
@@ -25,6 +31,13 @@ describe Girochin::Request do
     its(:user_agent)      { should eq 'DUMMY_HTTP_USER_AGENT' }
     its(:browser_name)    { should eq 'Unknown'               }
   end
+
+  describe 'ip address' do
+    its(:remote_addr) { should eq '127.0.0.1' }
+    its(:ip_address)  { should eq '127.0.0.1' }
+  end
+
+  its(:http_referer) { should eq 'www.rubylang.org' }
 
   describe 'Browsers' do
     context 'Chrome' do
