@@ -4,14 +4,13 @@ module Girochin
     attr_reader :http_user_agent, :remote_addr, :http_referer
 
     alias :user_agent :http_user_agent
+    alias :ip_address :remote_addr
 
     def http_request=(request)
       @http_user_agent = request.headers['HTTP_USER_AGENT']
       @remote_addr     = request.headers['REMOTE_ADDR']
       @http_referer    = request.headers['HTTP_REFERER']
     end
-
-    alias :ip_address :remote_addr
 
     def browser_name
       @browser_name ||= case http_user_agent
@@ -49,6 +48,12 @@ module Girochin
         else 'Unknown'
       end
     end
+
+    alias :girochin_http_referer    :http_referer
+    alias :girochin_ip_address      :ip_address
+    alias :girochin_browser_name    :browser_name
+    alias :girochin_browser_version :browser_version
+    alias :girochin_user_os         :user_os
 
   private
 
