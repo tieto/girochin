@@ -44,6 +44,7 @@ module Girochin
         when /windows nt 5\.0/i        then 'Windows 2000'
         when /os x (\d+)[._](\d+)/i    then "OS X #{$1}.#{$2}"
         when /android (\d+)[._](\d+)/i then "Android #{$1}.#{$2}"
+        when /iPhone/i                 then "iOS"
         when /linux/i                  then 'Linux'
         else 'Unknown'
       end
