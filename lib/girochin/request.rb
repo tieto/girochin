@@ -49,6 +49,7 @@ module Girochin
       end
     end
 
+    alias :girochin_http_user_agent :http_user_agent
     alias :girochin_http_referer    :http_referer
     alias :girochin_ip_address      :ip_address
     alias :girochin_browser_name    :browser_name
